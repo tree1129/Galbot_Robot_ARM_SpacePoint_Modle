@@ -2,7 +2,24 @@
 
 银河通用 G1 双臂机器人末端可达空间建模工具与实机采样结果。项目基于机器人官方 URDF 关节限位，通过 Sobol 低差异序列采样和 URDF 正运动学，把左右夹爪 TCP 的连续可达空间转换为 20 mm 三维体素点云。
 
-> 这是离线建模工具，代码不导入 Galbot SDK，不会向机器人发送任何运动指令。
+> 可达空间建模工具本身不依赖 Galbot SDK。视觉抓取影子系统只提供可选的 SDK 相机读取适配器，不会向机器人发送任何运动指令。
+
+## 视觉抓取影子系统（待审阅）
+
+仓库已增加一套默认无法驱动实机的桌面抓取规划层：头部双目相机做全局候选检测，左右腕 RGB-D 做近场三维精定位，再用本仓库的 `base_link` 可达体素和障碍廊道选择左/右臂。大模型是可选的语义消歧门，不能提供运动坐标或越过安全规则。
+
+架构、延迟预算、安全门、VLM 环境变量与分阶段上线流程见 [G1 双相机快速抓取架构](docs/GRASP_ARCHITECTURE.md)。
+
+本地影子演示：
+
+```bash
+pip install -e '.[test]'
+g1-grasp-shadow examples/shadow_scene.json --command '抓取苹果' --data-dir data
+```
+
+返回 `READY_FOR_SHADOW_REVIEW` 也不是动作许可；当前版本固定输出 `execution_permitted: false`，且没有任何运动/夹爪 API 适配器。
+
+服务器部署文件位于 `deploy/systemd/`：影子规划 API 默认使用 `8088` 端口和 Bearer token，可达空间查看器使用 `8090` 端口。
 
 ## 三维结果
 
@@ -69,9 +86,18 @@ flowchart LR
 │   ├── images/
 │   └── viewer.html
 ├── src/
+│   ├── g1_grasp/
+│   │   ├── adapters/galbot_sdk_readonly.py
+│   │   ├── perception.py
+│   │   ├── pipeline.py
+│   │   ├── reachability.py
+│   │   └── vlm.py
 │   ├── build_reachability.py
 │   ├── query_reachability.py
 │   └── render_static.py
+├── tests/
+├── examples/shadow_scene.json
+├── pyproject.toml
 ├── README.md
 └── requirements.txt
 ```

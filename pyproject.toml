@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "galbot-g1-reachability"
+version = "0.2.0"
+description = "Reachability maps and a fail-closed G1 tabletop grasp shadow pipeline"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+vlm = ["openai>=1.50"]
+test = ["pytest>=8"]
+
+[project.scripts]
+g1-grasp-shadow = "g1_grasp.cli:main"
+g1-grasp-server = "g1_grasp.server:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

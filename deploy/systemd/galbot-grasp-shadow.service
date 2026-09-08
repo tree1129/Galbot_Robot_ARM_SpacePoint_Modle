@@ -1,0 +1,20 @@
+[Unit]
+Description=Galbot G1 non-actuating grasp shadow planner
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/services/Galbot_Robot_ARM_SpacePoint_Modle
+EnvironmentFile=%h/.config/galbot-grasp-shadow/env
+ExecStart=%h/services/Galbot_Robot_ARM_SpacePoint_Modle/.venv/bin/python -m g1_grasp.server --host 0.0.0.0 --port 8088 --data-dir data
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/services/Galbot_Robot_ARM_SpacePoint_Modle
+
+[Install]
+WantedBy=default.target
+

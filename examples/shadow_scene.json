@@ -1,0 +1,42 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "apple_01",
+      "label": "苹果",
+      "confidence": 0.94,
+      "center_base_m": [0.56, 0.25, 0.82],
+      "size_m": [0.075, 0.075, 0.08],
+      "source_cameras": ["head_left", "left_wrist_depth"],
+      "depth_coverage": 0.93
+    },
+    {
+      "candidate_id": "cup_01",
+      "label": "杯子",
+      "confidence": 0.91,
+      "center_base_m": [0.52, -0.24, 0.84],
+      "size_m": [0.08, 0.08, 0.12],
+      "source_cameras": ["head_right", "right_wrist_depth"],
+      "depth_coverage": 0.90
+    }
+  ],
+  "obstacles": [
+    {
+      "obstacle_id": "bottle_blocker",
+      "minimum_base_m": [0.34, -0.02, 0.76],
+      "maximum_base_m": [0.43, 0.06, 1.05]
+    }
+  ],
+  "safety": {
+    "frame_age_ms": 42,
+    "calibration_residual_mm": 5.2,
+    "depth_coverage": 0.92,
+    "nearest_human_m": 2.4,
+    "estop_available": true,
+    "robot_state_fresh": true
+  },
+  "current_tcp_base_m": {
+    "left": [0.30, 0.36, 1.05],
+    "right": [0.30, -0.36, 1.05]
+  }
+}
+
