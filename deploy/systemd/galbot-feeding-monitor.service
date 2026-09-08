@@ -1,0 +1,23 @@
+[Unit]
+Description=Galbot G1 feeding monitor only dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=galbot
+WorkingDirectory=/home/galbot/services/Galbot_Robot_ARM_SpacePoint_Modle
+Environment=PYTHONPATH=/home/galbot/services/Galbot_Robot_ARM_SpacePoint_Modle/src:/data/galbot/lib:/data/galbot/lib/python3/site-packages:/data/galbot/lib/python3.8.10:/data/galbot/lib/python3.8.10/site-packages
+Environment=GRASP_CLOUD_URL=http://192.168.31.170:8088
+EnvironmentFile=/home/galbot/.config/galbot-feeding-monitor/env
+ExecStart=/home/galbot/miniconda3/envs/vlapy38/bin/python -m g1_grasp.monitor --host 0.0.0.0 --port 7862
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target
+

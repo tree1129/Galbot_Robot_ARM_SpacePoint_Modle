@@ -21,6 +21,19 @@ g1-grasp-shadow examples/shadow_scene.json --command '抓取苹果' --data-dir d
 
 服务器部署文件位于 `deploy/systemd/`：影子规划 API 默认使用 `8088` 端口和 Bearer token，可达空间查看器使用 `8090` 端口。
 
+## G1 实时只读监视器
+
+`g1-feeding-monitor` 用于观察机器人当前在做什么，页面包含头部左/右相机、左/右腕部相机、云端 shadow 规划状态、执行遥操与运动规划进程标志，并可跳转到双臂三维可达空间。
+
+这是一个独立的 **MONITOR ONLY** 服务：
+
+- HTTP 只实现 `GET`，没有运动、关节、夹爪或导航路由；
+- 仅初始化 4 个 RGB 相机传感器，不导入 SDK 动作类；
+- 状态固定报告 `execution_permitted: false` 和 `motion_routes: 0`；
+- 相机和状态 API 使用随机 Bearer token 保护。令牌放在 URL fragment（`#token=...`）中，由浏览器转为 Authorization header，不会进入 HTTP 请求路径和服务日志。
+
+systemd 单元位于 `deploy/systemd/galbot-feeding-monitor.service`，默认监听 `7862` 端口。实机应将 `G1_MONITOR_TOKEN=<至少 32 字符的随机值>` 保存在权限为 `0600` 的 `/home/galbot/.config/galbot-feeding-monitor/env`。
+
 ## 三维结果
 
 ### 纯机械臂可达空间

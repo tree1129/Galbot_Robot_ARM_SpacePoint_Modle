@@ -14,7 +14,10 @@ class GalbotG1ReadOnlyCameras:
         except ImportError as exc:
             raise RuntimeError("Galbot G1 SDK is available only on the robot runtime") from exc
         self._SensorType = SensorType
-        self._robot = GalbotRobot()
+        # Installed G1 images use either a pybind singleton or a Python wrapper
+        # constructor, depending on SDK generation.
+        get_instance = getattr(GalbotRobot, "get_instance", None)
+        self._robot = get_instance() if get_instance is not None else GalbotRobot()
         sensors = {
             SensorType.HEAD_LEFT_CAMERA,
             SensorType.HEAD_RIGHT_CAMERA,
@@ -43,10 +46,12 @@ class GalbotG1ReadOnlyCameras:
             "right": self._SensorType.RIGHT_ARM_DEPTH_CAMERA,
         }
         sensor = mapping[camera_name]
-        extrinsic, timestamp_ns = self._robot.get_sensor_extrinsic(sensor, "base_link")
+        try:
+            extrinsic, timestamp_ns = self._robot.get_sensor_extrinsic(sensor, "base_link")
+        except TypeError:
+            extrinsic, timestamp_ns = self._robot.get_sensor_extrinsic(sensor)
         return {
             "intrinsic": self._robot.get_camera_intrinsic(sensor),
             "camera_to_base": extrinsic,
             "timestamp_ns": timestamp_ns,
         }
-

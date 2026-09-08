@@ -16,6 +16,7 @@ test = ["pytest>=8"]
 [project.scripts]
 g1-grasp-shadow = "g1_grasp.cli:main"
 g1-grasp-server = "g1_grasp.server:main"
+g1-feeding-monitor = "g1_grasp.monitor:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
