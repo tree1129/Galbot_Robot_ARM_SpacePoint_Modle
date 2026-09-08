@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "galbot-g1-reachability"
 version = "0.2.0"
 description = "Reachability maps and a fail-closed G1 tabletop grasp shadow pipeline"
-requires-python = ">=3.10"
+requires-python = ">=3.8"
 dependencies = ["numpy>=1.24"]
 
 [project.optional-dependencies]
