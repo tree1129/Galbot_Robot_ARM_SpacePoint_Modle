@@ -1069,7 +1069,14 @@ html&gt;body{padding:0}&lt;/style&gt;
   &lt;div class=&quot;text-small text-muted&quot; id=&quot;g1-detail&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;style&gt;
-  #g1-reach-viz { width: 100%; color: var(--foreground); }
+  #g1-reach-viz {
+    width: 100%;
+    color: var(--foreground);
+    --g1-left: light-dark(rgb(0 137 123), rgb(35 213 181));
+    --g1-right: light-dark(rgb(222 89 64), rgb(255 138 101));
+    --g1-robot: light-dark(rgb(55 71 84), rgb(196 211 223));
+    --g1-grid: light-dark(rgb(123 144 156), rgb(73 110 130));
+  }
   #g1-reach-viz h2 { margin-bottom: 12px; }
   #g1-reach-viz .g1-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 12px; }
   #g1-reach-viz .g1-stats .card { min-width: 0; }
@@ -1077,9 +1084,14 @@ html&gt;body{padding:0}&lt;/style&gt;
   #g1-reach-viz .g1-legend { justify-content: flex-start; margin: 8px 0; gap: 18px; }
   #g1-reach-viz .g1-legend span { display: inline-flex; align-items: center; gap: 6px; }
   #g1-reach-viz .g1-swatch { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
-  #g1-reach-viz .g1-left-swatch { background: var(--viz-series-1); }
-  #g1-reach-viz .g1-right-swatch { background: var(--viz-series-2); }
-  #g1-reach-viz .g1-stage { padding: 0; overflow: hidden; position: relative; }
+  #g1-reach-viz .g1-left-swatch { background: var(--g1-left); }
+  #g1-reach-viz .g1-right-swatch { background: var(--g1-right); }
+  #g1-reach-viz .g1-stage {
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    background: light-dark(rgb(242 248 248), rgb(7 19 29));
+  }
   #g1-reach-viz #g1-canvas { width: 100%; height: 590px; min-height: 420px; }
   #g1-reach-viz #g1-canvas canvas { display: block; width: 100%; height: 100%; }
   #g1-reach-viz #g1-error { padding: 24px; color: var(--text-destructive, var(--destructive)); }
@@ -1111,9 +1123,10 @@ html&gt;body{padding:0}&lt;/style&gt;
     probe.remove();
     return new THREE.Color(resolved);
   };
-  const leftColor = color(&#x27;--viz-series-1&#x27;);
-  const rightColor = color(&#x27;--viz-series-2&#x27;);
-  const neutralColor = color(&#x27;--muted-foreground&#x27;);
+  const leftColor = color(&#x27;--g1-left&#x27;);
+  const rightColor = color(&#x27;--g1-right&#x27;);
+  const robotColor = color(&#x27;--g1-robot&#x27;);
+  const gridColor = color(&#x27;--g1-grid&#x27;);
   const foregroundColor = color(&#x27;--foreground&#x27;);
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -1125,7 +1138,7 @@ html&gt;body{padding:0}&lt;/style&gt;
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.screenSpacePanning = true;
-  const light = new THREE.HemisphereLight(foregroundColor, neutralColor, 1.25);
+  const light = new THREE.HemisphereLight(foregroundColor, gridColor, 1.25);
   scene.add(light);
   const directional = new THREE.DirectionalLight(foregroundColor, 0.7);
   directional.position.set(3, -4, 6);
@@ -1166,7 +1179,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
   function rebuildRobot() {
     while (robotGroup.children.length) robotGroup.remove(robotGroup.children[0]);
-    const material = new THREE.MeshStandardMaterial({ color: foregroundColor, roughness: 0.55, metalness: 0.15, transparent: true, opacity: 0.86 });
+    const material = new THREE.MeshStandardMaterial({ color: robotColor, roughness: 0.55, metalness: 0.15, transparent: true, opacity: 0.9 });
     DATA[mode].segments.forEach(segment =&gt; robotGroup.add(cylinderBetween(segment[0], segment[1], 0.035, material)));
     const joints = new Set(DATA[mode].segments.flatMap(segment =&gt; [JSON.stringify(segment[0]), JSON.stringify(segment[1])]));
     joints.forEach(encoded =&gt; {
@@ -1186,7 +1199,7 @@ html&gt;body{padding:0}&lt;/style&gt;
   }
 
   function addReference() {
-    const grid = new THREE.GridHelper(5, 50, neutralColor, neutralColor);
+    const grid = new THREE.GridHelper(5, 50, gridColor, gridColor);
     grid.rotation.x = Math.PI / 2;
     grid.material.transparent = true;
     grid.material.opacity = 0.19;

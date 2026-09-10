@@ -54,7 +54,7 @@ systemd 单元位于 `deploy/systemd/galbot-feeding-monitor.service`，默认监
 
 ![G1 上身机构与手臂 TCP 联合可达空间](docs/images/whole-body-isometric.png)
 
-蓝色为左臂 TCP，橙色为右臂 TCP，黑色为从 URDF 关节链计算得到的 G1 连杆模型。图像为高密度显示抽样，仓库中的 NPZ 保留完整体素。
+青绿色为左臂 TCP，珊瑚橙为右臂 TCP，灰蓝色为从 URDF 关节链计算得到的 G1 连杆模型。图像为高密度显示抽样，仓库中的 NPZ 保留完整体素。
 
 ## 实机生成结果
 
