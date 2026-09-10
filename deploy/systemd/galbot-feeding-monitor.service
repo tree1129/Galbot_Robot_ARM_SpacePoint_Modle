@@ -8,7 +8,12 @@ Type=simple
 User=galbot
 WorkingDirectory=/home/galbot/services/Galbot_Robot_ARM_SpacePoint_Modle
 Environment=PYTHONPATH=/home/galbot/services/Galbot_Robot_ARM_SpacePoint_Modle/src:/data/galbot/lib:/data/galbot/lib/python3/site-packages:/data/galbot/lib/python3.8.10:/data/galbot/lib/python3.8.10/site-packages
+Environment=LD_LIBRARY_PATH=/data/galbot/lib
 Environment=GRASP_CLOUD_URL=http://192.168.31.170:8088
+Environment=G1_CAMERA_MODE=v4l2
+Environment=G1_HEAD_DEVICE=/dev/video6
+Environment=G1_LEFT_WRIST_DEVICE=/dev/video4
+Environment=G1_RIGHT_WRIST_DEVICE=/dev/video12
 EnvironmentFile=/home/galbot/.config/galbot-feeding-monitor/env
 ExecStart=/home/galbot/miniconda3/envs/vlapy38/bin/python -m g1_grasp.monitor --host 0.0.0.0 --port 7862
 Restart=on-failure
@@ -20,4 +25,3 @@ ProtectHome=read-only
 
 [Install]
 WantedBy=multi-user.target
-

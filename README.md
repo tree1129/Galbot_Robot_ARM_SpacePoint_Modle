@@ -28,11 +28,17 @@ g1-grasp-shadow examples/shadow_scene.json --command '抓取苹果' --data-dir d
 这是一个独立的 **MONITOR ONLY** 服务：
 
 - HTTP 只实现 `GET`，没有运动、关节、夹爪或导航路由；
-- 仅初始化 4 个 RGB 相机传感器，不导入 SDK 动作类；
+- 仅初始化相机输入，不导入 SDK 动作类；相机后端支持 `auto`、Galbot SDK 和只读 V4L2；
+- `auto` 模式优先尝试 SDK，初始化失败后回退到 V4L2。实机部署固定使用 V4L2，头部 `/dev/video6` 的 1280×480 双目合并帧会拆分为左、右两路；
+- 左腕 `/dev/video4`、右腕 `/dev/video12` 独立读取。某一路设备被其他进程占用时，只将该路标记为“占用”，不会抢占设备、终止进程或影响其他相机；
 - 状态固定报告 `execution_permitted: false` 和 `motion_routes: 0`；
 - 相机和状态 API 使用随机 Bearer token 保护。令牌放在 URL fragment（`#token=...`）中，由浏览器转为 Authorization header，不会进入 HTTP 请求路径和服务日志。
 
 systemd 单元位于 `deploy/systemd/galbot-feeding-monitor.service`，默认监听 `7862` 端口。实机应将 `G1_MONITOR_TOKEN=<至少 32 字符的随机值>` 保存在权限为 `0600` 的 `/home/galbot/.config/galbot-feeding-monitor/env`。
+
+2026-09-10 的 G1 实机验证中，头部左/右与右腕共 3 路实时，左腕设备由既有的 `8877` 相机服务占用，因此监视器按设计显示 `3/4 CAMERA READY`；运动执行许可仍为 `FALSE`，运动路由仍为 `0`。
+
+![G1 喂饭任务只读监视器：三路相机实时、左腕占用、运动锁定](docs/images/feeding-monitor-v4l2.png)
 
 ## 三维结果
 
